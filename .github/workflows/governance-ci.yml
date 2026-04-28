@@ -25,6 +25,7 @@ jobs:
         run: |
           test -f docs/governance/BRANCH-POLICY.md
           test -f docs/governance/RELEASE-POLICY.md
+          test -f docs/governance/OPERATIONAL-RECOVERY.md
           test -f docs/features/domain-map.md
           for f in \
             domain-identity-verification.md \
@@ -36,3 +37,10 @@ jobs:
       - name: Baseline tags documented in RELEASE-POLICY
         run: grep -q 'v0.1-docs-baseline' docs/governance/RELEASE-POLICY.md
           && grep -q 'v0.5-release-baseline' docs/governance/RELEASE-POLICY.md
+
+      - name: Release policy sections (v0.5 gate)
+        run: |
+          grep -q '^## Release train' docs/governance/RELEASE-POLICY.md
+          grep -q '^## Rollback ladder' docs/governance/RELEASE-POLICY.md
+          grep -q '^## Hotfix path' docs/governance/RELEASE-POLICY.md
+          grep -q '^## Operational recovery' docs/governance/RELEASE-POLICY.md
