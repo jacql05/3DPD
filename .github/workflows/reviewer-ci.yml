@@ -1,0 +1,50 @@
+# L4 Reviewer (v1): deterministic PR contract checks only — no LLM.
+# See docs/governance/REVIEWER-GATEKEEPER.md
+name: reviewer-ci
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+concurrency:
+  group: reviewer-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reviewer-deterministic:
+    name: reviewer-deterministic
+    runs-on: ubuntu-latest
+    # Same-repo PRs only (skip forks without full context)
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Forbid feature branch targeting main
+        if: github.base_ref == 'main' && startsWith(github.head_ref, 'feature/')
+        run: |
+          echo "::error::Forbidden: feature/* cannot open a PR directly to main. Use feature → domain → integration → main (BRANCH-POLICY)."
+          exit 1
+
+      - name: PR body contract (skip docs/* and hotfix/* heads)
+        if: >-
+          !startsWith(github.head_ref, 'docs/') &&
+          !startsWith(github.head_ref, 'hotfix/')
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          body="${PR_BODY:-}"
+          if [ -z "$body" ]; then
+            echo "::error::PR body is empty; add Domain / Spec / Baseline per TASK-ROUTING.md"
+            exit 1
+          fi
+          echo "$body" | grep -qiE '(^|[\r\n])[\t ]*domain:' || { echo "::error::PR body must contain a Domain: line"; exit 1; }
+          echo "$body" | grep -qiE '(^|[\r\n])[\t ]*spec:' || { echo "::error::PR body must contain a Spec: line"; exit 1; }
+          echo "$body" | grep -qiE '(^|[\r\n])[\t ]*baseline:' || { echo "::error::PR body must contain a Baseline: line"; exit 1; }
+          echo "$body" | grep -qE 'docs/features/[^[:space:]]+\.md' || { echo "::error::PR body must reference a feature spec path docs/features/....md (after Spec: or elsewhere)"; exit 1; }
+          echo "PR body contract OK."
+
+      - name: Skip notice (docs or hotfix heads)
+        if: >-
+          startsWith(github.head_ref, 'docs/') ||
+          startsWith(github.head_ref, 'hotfix/')
+        run: echo "Skipping strict PR body contract for docs/* or hotfix/* head per REVIEWER-GATEKEEPER.md"
