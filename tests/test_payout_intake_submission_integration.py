@@ -3,7 +3,7 @@
 from payments_tax_payout_intake.payout_intake import process_payout_intake_submission
 
 
-def test_submission_happy_path() -> None:
+def test_submission_normalizes_currency_and_amount_on_success() -> None:
     result = process_payout_intake_submission(
         {
             "amount": "50.00",

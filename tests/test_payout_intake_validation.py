@@ -18,7 +18,7 @@ def test_rejects_stripe_key_field() -> None:
     assert any("stripe" in e.lower() for e in errs)
 
 
-def test_rejects_bad_amount_precision() -> None:
+def test_rejects_amount_with_more_than_two_decimal_places() -> None:
     errs, norm = validate_payout_intake(
         {
             "amount": "10.001",
