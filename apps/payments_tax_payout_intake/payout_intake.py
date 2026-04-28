@@ -11,11 +11,15 @@ from typing import Any
 
 def _forbidden_payment_vendor_keys(payload: dict[str, Any]) -> list[str]:
     errs: list[str] = []
+    stripe_msg = "stripe-related fields are not accepted in payout intake"
+    stripe_reported = False
     for key in payload:
         kl = str(key).lower()
         if "stripe" in kl:
-            errs.append("stripe-related fields are not accepted in payout intake")
-        if kl in ("card_number", "pan", "cvv", "payment_intent_id"):
+            if not stripe_reported:
+                errs.append(stripe_msg)
+                stripe_reported = True
+        elif kl in ("card_number", "pan", "cvv", "payment_intent_id"):
             errs.append(f"forbidden sensitive field: {key}")
     return errs
 
