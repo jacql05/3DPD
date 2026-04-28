@@ -93,5 +93,6 @@ Contributors SHOULD run `git commit` from a normal terminal when possible so ful
 ## References
 
 - `docs/features/domain-map.md` — slugs and evolution rule
-- `docs/governance/RELEASE-POLICY.md` — tags and releases
+- `docs/governance/RELEASE-POLICY.md` — tags, release train, rollback ladder, hotfix path
+- `docs/governance/OPERATIONAL-RECOVERY.md` — incident runbook outline
 - `docs/governance/AUTHORITY-PROMOTION.md` — promoting or changing authoritative docs
