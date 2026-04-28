@@ -35,5 +35,8 @@ No new domain may be created silently through an ad-hoc branch or document.
 
 - Documentation and repo skeleton: `v0.1-docs-baseline`
 - Domain architecture (this map + per-domain specs): `v0.2-domain-baseline`
+- Governance execution (branch policy, pre-commit safe mode, JIT domain branches): `v0.3-governance-baseline`
+
+Full ladder and rules: `docs/governance/RELEASE-POLICY.md`.
 
 Later baselines extend this chain; they do not replace prior tags without an explicit governance decision.
