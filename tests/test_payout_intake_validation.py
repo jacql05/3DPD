@@ -18,7 +18,22 @@ def test_rejects_stripe_key_field() -> None:
     assert any("stripe" in e.lower() for e in errs)
 
 
-def test_rejects_bad_amount_precision() -> None:
+def test_rejects_multiple_stripe_key_fields_with_single_stripe_message() -> None:
+    errs, norm = validate_payout_intake(
+        {
+            "amount": "10.00",
+            "currency": "aud",
+            "payee_reference": "creator-001",
+            "stripe_secret": "sk_test_xxx",
+            "stripe_publishable": "pk_test_xxx",
+        }
+    )
+    assert norm is None
+    stripe_msgs = [e for e in errs if "stripe" in e.lower()]
+    assert len(stripe_msgs) == 1
+
+
+def test_rejects_amount_with_more_than_two_decimal_places() -> None:
     errs, norm = validate_payout_intake(
         {
             "amount": "10.001",

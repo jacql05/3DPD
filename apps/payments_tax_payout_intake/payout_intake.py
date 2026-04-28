@@ -11,17 +11,22 @@ from typing import Any
 
 def _forbidden_payment_vendor_keys(payload: dict[str, Any]) -> list[str]:
     errs: list[str] = []
+    stripe_error_added = False
     for key in payload:
         kl = str(key).lower()
-        if "stripe" in kl:
+        if "stripe" in kl and not stripe_error_added:
             errs.append("stripe-related fields are not accepted in payout intake")
-        if kl in ("card_number", "pan", "cvv", "payment_intent_id"):
+            stripe_error_added = True
+        elif kl in ("card_number", "pan", "cvv", "payment_intent_id"):
             errs.append(f"forbidden sensitive field: {key}")
     return errs
 
 
 def validate_payout_intake(payload: dict[str, Any]) -> tuple[list[str], dict[str, str] | None]:
-    """Validate a payout intake record. Does not execute payouts."""
+    """Validate a payout intake record. Does not execute payouts.
+
+    Returns ``(errors, normalized)`` where ``normalized`` is ``None`` if validation failed.
+    """
     errors: list[str] = []
     if not isinstance(payload, dict):
         return (["payload must be an object"], None)
@@ -32,7 +37,7 @@ def validate_payout_intake(payload: dict[str, Any]) -> tuple[list[str], dict[str
     amount_raw = payload.get("amount")
 
     if len(ref) < 3:
-        errors.append("payee_reference is required (min 3 characters)")
+        errors.append("payee_reference must be at least 3 characters")
     if len(currency) != 3 or not currency.isalpha():
         errors.append("currency must be three letters (ISO-style placeholder)")
 
