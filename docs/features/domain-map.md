@@ -36,6 +36,8 @@ No new domain may be created silently through an ad-hoc branch or document.
 - Documentation and repo skeleton: `v0.1-docs-baseline`
 - Domain architecture (this map + per-domain specs): `v0.2-domain-baseline`
 - Governance execution (branch policy, pre-commit safe mode, JIT domain branches): `v0.3-governance-baseline`
+- First governed execution merge to `main`: `v0.4-execution-baseline`
+- Release & recovery governance (this policy + operational runbook): `v0.5-release-baseline` (see `RELEASE-POLICY.md`)
 
 Full ladder and rules: `docs/governance/RELEASE-POLICY.md`.
 
