@@ -1,0 +1,38 @@
+# CI aligns with local pre-commit *safe mode* semantics:
+# - GitHub Actions sets CI=true (implicit); hooks that honor CI skip TTY prompts.
+# - Optional explicit vars mirror ~/.githooks/pre-commit (see docs/governance/BRANCH-POLICY.md).
+name: governance-ci
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: governance-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  governance-sanity:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      GIT_PRE_COMMIT_NONINTERACTIVE: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Required authority files exist
+        run: |
+          test -f docs/governance/BRANCH-POLICY.md
+          test -f docs/governance/RELEASE-POLICY.md
+          test -f docs/features/domain-map.md
+          for f in \
+            domain-identity-verification.md \
+            domain-payments-tax.md \
+            domain-compliance-legal.md; do
+            test -f "docs/features/$f"
+          done
+
+      - name: Baseline tags documented in RELEASE-POLICY
+        run: grep -q 'v0.1-docs-baseline' docs/governance/RELEASE-POLICY.md
+          && grep -q 'v0.5-release-baseline' docs/governance/RELEASE-POLICY.md

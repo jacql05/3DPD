@@ -21,3 +21,15 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+# --- Common (repo bootstrap) ---
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+build/
+*.log
+__pycache__/
+.venv/
