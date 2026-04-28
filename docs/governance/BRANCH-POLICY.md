@@ -82,7 +82,7 @@ Global or repo hooks MUST NOT require a TTY for routine commits, or agents and C
 
 - If the hook cannot prompt (non-interactive / no usable TTY), it runs in **safe mode**: print diff and impact summary, then apply automatic rules below—**no** interactive `yes` / `CONFIRM` prompts.
 - **Commits to `main` in safe mode** are blocked unless `GIT_PRE_COMMIT_ALLOW_MAIN=1` is set intentionally for documented automation.
-- **High-risk paths** (`docs/SSOT/`, `apps/worker/`, `scripts/` touching governance, etc. as defined in the hook): blocked in safe mode unless `GIT_PRE_COMMIT_ACK_HIGH_RISK=1`.
+- **High-risk paths** (`docs/SSOT/`, `apps/worker/`, `apps/api/`, `scripts/` as defined in the global hook — **not** ordinary `tests/`-only commits): blocked in safe mode unless `GIT_PRE_COMMIT_ACK_HIGH_RISK=1`. See `docs/governance/PRE-COMMIT-LOCAL-HOOK.md` for hook version alignment.
 - **SSOT changes:** blocked in safe mode unless `GIT_PRE_COMMIT_ACK_SSOT=1` and commit message includes required justification lines per SSOT policy.
 - **Large diffs** (hook threshold): blocked in safe mode unless `GIT_PRE_COMMIT_ACK_LARGE=1`.
 
