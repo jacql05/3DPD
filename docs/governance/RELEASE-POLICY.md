@@ -11,13 +11,23 @@ Repository **authority baselines** use lightweight tags with this fixed naming s
 | `v0.1-docs-baseline` | Documentation skeleton and initial governance placeholders. |
 | `v0.2-domain-baseline` | Domain map + per-domain specs (first-level boundaries). |
 | `v0.3-governance-baseline` | Executable governance: branch policy, pre-commit safe mode contract, JIT `domain/*` lines. |
-| `v0.4-execution-baseline` | First integrated application / execution plane agreed for production path (TBD when reached). |
+| `v0.4-execution-baseline` | First governed **execution path** merged to `main` (e.g. `domain/*` → `integration` → `main`). Tag only after that merge and required checks pass. |
 | `v0.5-release-baseline` | First repeatable release train (CI, artifacts, rollback naming) (TBD when reached). |
 
 **Rules:**
 
 - New baselines **append** to the chain; they do not delete or retag prior baselines without a decision recorded in `AUTHORITY-PROMOTION.md`.
 - Application semver (e.g. `v1.0.0` for a shipped app) is **separate** from these `v0.x-*-baseline` tags unless explicitly unified in a future governance amendment.
+
+## Audit (v0.4 execution baseline)
+
+**Do not** tag `v0.4-execution-baseline` until the promotion PR from `integration` to `main` is **merged** (not merely open) and status checks (e.g. `governance-sanity`) are green.
+
+If a **single maintainer** temporarily reduced GitHub **Require approvals** on `main` from **1** to **0** to complete that merge, the audit chain MUST include this exact sentence in the same window (PR description and/or this repository):
+
+> **Single-maintainer exception used for v0.4 bootstrap.**
+
+Restore **Require approvals** to **1** immediately after merge. Full procedure: `docs/governance/BRANCH-POLICY.md` — *Single-maintainer exception*.
 
 ## Product releases (future)
 

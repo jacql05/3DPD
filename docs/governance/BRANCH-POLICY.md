@@ -53,6 +53,22 @@ Rules are **defaults** until overridden in writing by org governance (e.g. CODEO
 
 **Enforcement:** Teams SHOULD use branch protection on `main` (required reviews, required status checks). `integration` SHOULD match `main`’s rules or stricter if it is used.
 
+## Single-maintainer exception (GitHub rules; audit)
+
+When **only one maintainer account** exists, GitHub branch protection may require an approving review that the same account cannot provide on its own PR. For a **one-time bootstrap** merge (e.g. `integration` → `main` for the first governed execution path), the maintainer MAY temporarily:
+
+1. In **Settings → Rules** (or branch protection for `main`), set **Require approvals** from **1** to **0**, save.
+2. Merge the blocked PR (e.g. execution promotion to `main`).
+3. **Immediately** restore **Require approvals** to **1** (or org default), save.
+
+**Audit record (required for compliance with this policy):** Any use of this procedure MUST be stated in the merge PR body or in a governance doc revision in the same window. For the first execution baseline:
+
+> **Single-maintainer exception used for v0.4 bootstrap.**
+
+Without that sentence recorded in git history (PR description or this file at merge time), the audit chain is incomplete.
+
+**Tag rule:** Do **not** create `v0.4-execution-baseline` until the promotion PR is **merged** into `main` and required checks (e.g. `governance-sanity`) have passed. See `RELEASE-POLICY.md` — Audit (v0.4 execution baseline).
+
 ## Rollback rules
 
 | Situation | Preferred action |
