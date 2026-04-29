@@ -76,6 +76,84 @@
 
 ---
 
+## Case log (Stabilization Window — dated, recurrence-focused)
+
+Use this subsection to count toward **Reviewer v2 Launch Gate — Condition B** (`reviewer-v2-launch.md`). Prefer **repeat** incidents; one-offs go under topic sections above.
+
+### 2026-04-29 — Required check name did not match Actions job label
+
+- **Problem:** Branch protection required a label that did not match the **job** name GitHub reported (e.g. workflow file vs `pytest` / `governance-sanity` / `reviewer-deterministic`).
+- **Impact:** Merge blocked with check “expected” while another green check existed; looked like CI failure.
+- **Fix:** Documented exact job names in `GITHUB-BRANCH-PROTECTION.md` and `FRICTION-LOG.md`; align rulesets to PR Checks tab strings.
+
+### 2026-04-29 — Unresolved Copilot / review threads blocked merge (not approvals)
+
+- **Problem:** GitHub showed **“A conversation must be resolved”** while approval rules were already satisfied.
+- **Impact:** Time spent on approval count instead of resolving threads; merge still blocked.
+- **Fix:** Resolve threads on **Files changed** first; use `resolveReviewThread` GraphQL when threads are stale but open.
+
+### 2026-04-28 — `integration` vs `main` add/add conflicts on shared payout paths
+
+- **Problem:** Same files introduced on divergent histories → merge conflict on promotion PR (`integration` → `main`).
+- **Impact:** Risk of dropping doc cleanup or duplicating logic; noisy merge UI.
+- **Fix:** Merge `main` into `integration` before promotion; resolve once on `integration`; keep net diff domain-scoped.
+
+### 2026-04-28 — Copilot flagged PR scope vs promotion intent (payments-tax train)
+
+- **Problem:** Promotion PR diff history touched multiple domains while title claimed a narrow payments-tax promotion.
+- **Impact:** Reviewer ambiguity; repeated scope discussion on same promotion class.
+- **Fix:** Narrow diff via merge hygiene; update PR title/body to match files actually changed; track for future **scope drift** rule.
+
+### 2026-04-29 — `gh pr edit` failed; REST `PATCH` on pull request worked
+
+- **Problem:** `gh pr edit` returned GraphQL error path involving classic Projects.
+- **Impact:** Could not update PR title/body from CLI with the obvious command.
+- **Fix:** Use `gh api --method PATCH repos/{owner}/{repo}/pulls/{pull_number}` with JSON body file.
+
+### 2026-04-29 — Draft PR skipped `reviewer-deterministic` until marked ready
+
+- **Problem:** Workflow skips draft PRs; checks did not run when authors expected.
+- **Impact:** False sense that reviewer passed; late surprise after “Ready for review”.
+- **Fix:** Mark ready when merge-bound; document in PR checklist.
+
+### 2026-04-28 — Maintainer tuned approvals (1→0) before checking conversations
+
+- **Problem:** Merge still blocked by unresolved conversations after temporary approval relaxation.
+- **Impact:** Wrong lever pulled; policy exception used without removing the real blocker.
+- **Fix:** Document order: **resolve conversations →** then approvals if still required.
+
+### 2026-04-28 — `reviewer-ci` PR body contract vs `docs/*` head exemption
+
+- **Problem:** Confusion whether governance PRs to `main` must carry `Domain/Spec/Baseline` in body.
+- **Impact:** Risk of failing a docs-only PR or omitting contract on feature PRs.
+- **Fix:** Recorded skip rules in `REVIEWER-GATEKEEPER.md` (`docs/*`, `hotfix/*`).
+
+### 2026-04-29 — Multiple stripe-related keys duplicated the same error string
+
+- **Problem:** Loop appended the same stripe rejection message once per matching key.
+- **Impact:** Noisy, unstable error list for validators and tests.
+- **Fix:** Single flag / single append for stripe class; regression test for multiple keys.
+
+### 2026-04-28 — `feature/*` → `main` intent vs reviewer deterministic gate
+
+- **Problem:** Direct feature→main violates ladder; must be caught before merge.
+- **Impact:** Would bypass domain/integration soak.
+- **Fix:** `reviewer-ci` fails when `base_ref == main` and `head_ref` matches `feature/*`.
+
+### 2026-04-29 — FRICTION-LOG template said “dated” but first example lacked date in heading
+
+- **Problem:** “Append dated block” guidance did not match the first example heading format.
+- **Impact:** Copilot / human confusion about required format for Condition B counting.
+- **Fix:** Renamed example to `### YYYY-MM-DD — …` and documented pattern in “How to add an entry”.
+
+### 2026-04-29 — Launch Gate doc added before friction count reached 10+
+
+- **Problem:** `reviewer-v2-launch.md` requires **10+** friction cases; log had fewer discrete dated rows.
+- **Impact:** Condition B formally unmet; risk of starting v2 too early.
+- **Fix:** This case log section expands dated entries; keep appending as incidents recur.
+
+---
+
 ## Where rules felt “too heavy”
 
 *(Append examples here: e.g. required two reviewers on a single-maintainer org, strict base-branch rules without documented exception path.)*
