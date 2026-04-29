@@ -93,3 +93,4 @@
 - `BRANCH-POLICY.md` — merge ladder  
 - `REVIEWER-GATEKEEPER.md` — Reviewer vs Gatekeeper, skip rules  
 - `GITHUB-BRANCH-PROTECTION.md` — check names and protection alignment  
+- `reviewer-v2-launch.md` — when L4 Reviewer v2 is allowed (launch gate)  
