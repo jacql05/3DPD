@@ -2,7 +2,7 @@
 
 **Purpose:** Record where delivery **stuck**, where automation **mis-fired**, where rules felt **too heavy**, where **reviewers** (human or CI) were too blunt, where **hooks** annoyed without payoff, and where **promotion** (branch → PR → merge) was **unclean**. Use this to tune governance without losing intent.
 
-**How to add an entry:** Append a dated block under the right heading. Prefer this shape:
+**How to add an entry:** Append a dated block under the right heading. Start each example with a dated heading, e.g. `### YYYY-MM-DD — Short title`. Prefer this shape under that heading:
 
 - **Problem:** What happened (observable).
 - **Impact:** Time lost, merge blocked, wrong signal, etc.
@@ -12,7 +12,7 @@
 
 ## Required checks and branch protection (name mismatch)
 
-### Example: check name mismatch → merge appears blocked
+### 2026-04-29 — Check name mismatch → merge appears blocked
 
 - **Problem:** Branch protection or rulesets referenced a **status check name** that did not match what GitHub Actions actually reported (e.g. workflow filename vs **job** `name`, or shorthand vs full check string). Symptom: required check stuck **pending / expected** while CI was already green under a *different* label.
 - **Impact:** PR merge blocked until the ruleset was corrected; looked like “CI failed” when the real issue was **label alignment**.
@@ -72,7 +72,7 @@
 
 - **Problem:** `gh pr edit` failed with GraphQL noise (e.g. classic Projects) while REST `PATCH` on the pull request succeeded.
 - **Impact:** Could not update title/body from CLI until switching API.
-- **Fix:** Prefer `gh api --method PATCH repos/{owner}/{repo}/pulls/{number}` with `--input` JSON for reliable PR metadata updates.
+- **Fix:** Prefer `gh api --method PATCH repos/{owner}/{repo}/pulls/{pull_number}` with `--input` JSON for reliable PR metadata updates.
 
 ---
 
