@@ -8,7 +8,11 @@ This checklist aligns the hosted repo with `docs/governance/BRANCH-POLICY.md`. A
   - Required approvals: **≥ 1** (or org default); use **≥ 2** for regulated environments.
 - [ ] **Dismiss stale pull request approvals** when new commits are pushed (recommended).
 - [ ] **Require status checks to pass** before merging  
-  - Add check: **`governance-sanity`** (from workflow `governance-ci.yml`).
+  - Use the **exact job name** GitHub shows on the PR Checks tab (workflow file ≠ check name). Typical set:
+    - **`governance-sanity`** — workflow `governance-ci.yml`
+    - **`pytest`** — workflow `tests.yml`
+    - **`reviewer-deterministic`** — workflow `reviewer-ci.yml` (when enabled)
+  - If a required check stays “expected” while CI is green, see **`FRICTION-LOG.md`** (check name mismatch).
 - [ ] **Require branches to be up to date before merging** (recommended).
 - [ ] **Do not allow bypassing the above settings** (admins included), unless org policy forces an exception.
 - [ ] **Restrict who can push to matching branches** to maintainers only (no direct pushes for day-to-day work).
